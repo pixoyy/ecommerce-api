@@ -54,4 +54,34 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function getPriceRangeAttribute(): array
+    {
+        $prices = $this->productVariants->where('is_active', 1)->pluck('price');
+
+        if ($prices->isEmpty()) {
+            return ['min' => 0, 'max' => 0];
+        }
+
+        return [
+            'min' => (float) $prices->min(),
+            'max' => (float) $prices->max(),
+        ];
+    }
+
+    public function getActivePromoPrice(): ?float
+    {
+        $now = now();
+
+        $minPrice = $this->productVariants
+            ->flatMap(fn ($variant) => $variant->promotionItems
+                ->filter(fn ($item) => $item->promotion
+                    && $item->promotion->is_active
+                    && $item->promotion->start_at <= $now
+                    && $item->promotion->end_at >= $now)
+                ->pluck('override_price'))
+            ->min();
+
+        return $minPrice ? (float) $minPrice : null;
+    }
 }
