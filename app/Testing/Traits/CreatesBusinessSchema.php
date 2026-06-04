@@ -109,6 +109,15 @@ trait CreatesBusinessSchema
             $table->softDeletes();
         });
 
+        Schema::create('carts', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('product_variant_id')->references('id')->on('product_variants')->cascadeOnDelete();
+            $table->integer('quantity')->default(1);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
