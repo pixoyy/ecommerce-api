@@ -149,5 +149,60 @@ trait CreatesBusinessSchema
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('user_points', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->integer('balance')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('warehouse_id')->nullable()->references('id')->on('warehouses')->nullOnDelete();
+            $table->string('order_number')->unique();
+            $table->tinyInteger('status')->default(1);
+            $table->decimal('subtotal', 12, 2)->default(0);
+            $table->decimal('shipping_cost', 12, 2)->default(0);
+            $table->integer('point_redeemed')->default(0);
+            $table->integer('point_earned')->default(0);
+            $table->decimal('total', 12, 2)->default(0);
+            $table->string('buyer_name')->nullable();
+            $table->string('buyer_email')->nullable();
+            $table->string('buyer_phone')->nullable();
+            $table->text('shipping_address')->nullable();
+            $table->text('shipping_note')->nullable();
+            $table->text('note')->nullable();
+            $table->dateTime('paid_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('order_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_id')->references('id')->on('orders')->cascadeOnDelete();
+            $table->foreignId('product_variant_id')->nullable()->references('id')->on('product_variants')->nullOnDelete();
+            $table->foreignId('promotion_id')->nullable()->references('id')->on('promotions')->nullOnDelete();
+            $table->string('product_name');
+            $table->string('variant_label')->nullable();
+            $table->decimal('unit_price', 12, 2)->default(0);
+            $table->integer('quantity')->default(1);
+            $table->decimal('subtotal', 12, 2)->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('point_transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('order_id')->nullable()->references('id')->on('orders')->nullOnDelete();
+            $table->tinyInteger('type')->default(1);
+            $table->integer('amount')->default(0);
+            $table->text('description')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 }
