@@ -204,5 +204,31 @@ trait CreatesBusinessSchema
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('payment_accounts', function (Blueprint $table) {
+            $table->id();
+            $table->string('bank_name');
+            $table->string('account_number');
+            $table->string('account_name');
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_id')->references('id')->on('orders')->cascadeOnDelete();
+            $table->foreignId('payment_account_id')->nullable()->references('id')->on('payment_accounts')->nullOnDelete();
+            $table->foreignId('proof_path')->nullable()->references('id')->on('file_storages')->nullOnDelete();
+            $table->foreignId('approved_by')->nullable();
+            $table->foreignId('rejected_by')->nullable();
+            $table->decimal('amount', 12, 2)->default(0);
+            $table->tinyInteger('status')->default(1);
+            $table->text('rejected_reason')->nullable();
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('rejected_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 }
