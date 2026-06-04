@@ -84,6 +84,31 @@ trait CreatesBusinessSchema
             $table->softDeletes();
         });
 
+        Schema::create('product_images', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->foreignId('path')->nullable()->references('id')->on('file_storages')->nullOnDelete();
+            $table->integer('sort_order')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('warehouses', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('warehouse_stocks', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('warehouse_id')->references('id')->on('warehouses')->cascadeOnDelete();
+            $table->foreignId('product_variant_id')->references('id')->on('product_variants')->cascadeOnDelete();
+            $table->integer('quantity')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->string('name');

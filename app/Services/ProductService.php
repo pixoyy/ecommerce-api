@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Review;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductService
@@ -91,5 +92,40 @@ class ProductService
         };
 
         return $query->paginate(12);
+    }
+
+    public function getProductBySlug(string $slug): Product
+    {
+        $product = Product::where('slug', $slug)
+            ->where('is_active', 1)
+            ->firstOrFail();
+
+        $product->load([
+            'brand',
+            'category',
+            'thumbnailImage',
+            'productImages' => fn ($q) => $q->orderBy('sort_order'),
+            'productImages.fileStorage',
+            'productVariants' => fn ($q) => $q->where('is_active', 1),
+            'productVariants.warehouseStocks',
+            'productVariants.promotionItems.promotion' => fn ($q) => $q
+                ->where('is_active', 1)
+                ->where('start_at', '<=', now())
+                ->where('end_at', '>=', now()),
+        ]);
+
+        $product->loadAvg(['reviews' => fn ($q) => $q->where('is_visible', 1)], 'rating');
+        $product->loadCount(['reviews as total_reviews' => fn ($q) => $q->where('is_visible', 1)]);
+
+        return $product;
+    }
+
+    public function getProductReviews(int $productId): LengthAwarePaginator
+    {
+        return Review::where('product_id', $productId)
+            ->where('is_visible', 1)
+            ->with('user')
+            ->latest()
+            ->paginate(10);
     }
 }

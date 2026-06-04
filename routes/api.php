@@ -14,6 +14,8 @@ Route::post('/login', LoginController::class);
 Route::get('/categories', CategoryController::class);
 Route::get('/brands', BrandController::class);
 Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{slug}', [ProductController::class, 'show']);
+Route::get('/products/{product}/reviews', [ProductController::class, 'reviews']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', LogoutController::class);
