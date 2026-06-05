@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\RewardController;
 use App\Http\Controllers\Api\ShipmentController;
@@ -47,4 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/rewards/transactions', [RewardController::class, 'transactions']);
 
     Route::post('/orders/{order}/reviews', [ReviewController::class, 'store']);
+
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::put('/profile/password', [ProfileController::class, 'changePassword']);
 });
