@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderDetailResource;
 use App\Http\Resources\OrderResource;
+use App\Models\Order;
 use App\Services\OrderService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
@@ -37,5 +38,23 @@ class OrderController extends Controller
             new OrderDetailResource($order),
             'Detail pesanan berhasil diambil'
         );
+    }
+
+    public function cancel(Order $order): JsonResponse
+    {
+        if ($order->user_id !== auth()->id()) {
+            return $this->error('Pesanan tidak ditemukan', 404);
+        }
+
+        try {
+            $order = $this->orderService->cancelOrder(auth()->id(), $order->id);
+
+            return $this->success(
+                new OrderDetailResource($order),
+                'Pesanan berhasil dibatalkan'
+            );
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 422);
+        }
     }
 }
