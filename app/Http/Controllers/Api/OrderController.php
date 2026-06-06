@@ -11,6 +11,13 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Orders
+ *
+ * Order history, detail, and cancellation.
+ *
+ * @authenticated
+ */
 class OrderController extends Controller
 {
     use ApiResponseTrait;
@@ -19,6 +26,16 @@ class OrderController extends Controller
         protected OrderService $orderService
     ) {}
 
+    /**
+     * List orders
+     *
+     * Get paginated list of the authenticated user's orders.
+     *
+     * @queryParam status integer Filter by status (1=Pending, 2=Processing, 3=Shipped, 4=Delivered, 5=Cancelled). Example: 1
+     * @queryParam sort string Sort field. Example: created_at
+     * @queryParam order string Sort direction (asc, desc). Example: desc
+     * @queryParam per_page integer Items per page. Example: 15
+     */
     public function index(Request $request): JsonResponse
     {
         $filters = $request->only(['status', 'sort', 'order', 'per_page']);
@@ -30,6 +47,13 @@ class OrderController extends Controller
         );
     }
 
+    /**
+     * Get order detail
+     *
+     * Show full order details including items, payments, and shipment tracking.
+     *
+     * @urlParam order_number string required The order number. Example: INV/20250101/00001
+     */
     public function show(string $orderNumber): JsonResponse
     {
         $order = $this->orderService->getOrderByNumber(auth()->id(), $orderNumber);
@@ -40,6 +64,13 @@ class OrderController extends Controller
         );
     }
 
+    /**
+     * Cancel order
+     *
+     * Cancel a pending or processing order. Restores stock and redeemed points.
+     *
+     * @urlParam order integer required The order ID. Example: 1
+     */
     public function cancel(Order $order): JsonResponse
     {
         if ($order->user_id !== auth()->id()) {

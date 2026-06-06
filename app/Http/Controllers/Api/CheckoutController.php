@@ -9,6 +9,13 @@ use App\Services\CheckoutService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Checkout
+ *
+ * Create orders from cart items.
+ *
+ * @authenticated
+ */
 class CheckoutController extends Controller
 {
     use ApiResponseTrait;
@@ -17,6 +24,16 @@ class CheckoutController extends Controller
         protected CheckoutService $checkoutService
     ) {}
 
+    /**
+     * Checkout
+     *
+     * Create an order from the current cart. Validates stock, applies promotions,
+     * redeems points if requested, deducts stock, clears cart, and grants earned points.
+     *
+     * @bodyParam shipping_address string required Shipping address. Example: Jl. Merdeka No. 1, Jakarta
+     * @bodyParam shipping_note string Optional note for delivery. Example: Pagi hari
+     * @bodyParam redeem_points integer Points to redeem. Example: 10000
+     */
     public function __invoke(CheckoutRequest $request): JsonResponse
     {
         try {

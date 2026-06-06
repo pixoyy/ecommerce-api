@@ -10,6 +10,13 @@ use App\Services\AuthService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Profile
+ *
+ * Customer profile management.
+ *
+ * @authenticated
+ */
 class ProfileController extends Controller
 {
     use ApiResponseTrait;
@@ -18,6 +25,11 @@ class ProfileController extends Controller
         protected AuthService $authService
     ) {}
 
+    /**
+     * Get profile
+     *
+     * Show the authenticated user's profile data.
+     */
     public function show(): JsonResponse
     {
         return $this->success(
@@ -26,6 +38,15 @@ class ProfileController extends Controller
         );
     }
 
+    /**
+     * Update profile
+     *
+     * Update name, phone, or email of the authenticated user.
+     *
+     * @bodyParam name string required Full name. Example: Budi Santoso
+     * @bodyParam email string required Email address. Example: budi@example.com
+     * @bodyParam phone string Phone number. Example: 08123456789
+     */
     public function update(ProfileUpdateRequest $request): JsonResponse
     {
         $user = $this->authService->updateProfile(
@@ -39,6 +60,15 @@ class ProfileController extends Controller
         );
     }
 
+    /**
+     * Change password
+     *
+     * Change the authenticated user's password. Requires current password verification.
+     *
+     * @bodyParam current_password string required Current password. Example: password123
+     * @bodyParam new_password string required New password (min 8 chars). Example: newpassword123
+     * @bodyParam new_password_confirmation string required Confirm new password. Example: newpassword123
+     */
     public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
         try {

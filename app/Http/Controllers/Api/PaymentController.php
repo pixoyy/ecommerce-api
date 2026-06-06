@@ -11,6 +11,13 @@ use App\Services\PaymentService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Payment
+ *
+ * Payment accounts and proof upload.
+ *
+ * @authenticated
+ */
 class PaymentController extends Controller
 {
     use ApiResponseTrait;
@@ -19,6 +26,11 @@ class PaymentController extends Controller
         protected PaymentService $paymentService
     ) {}
 
+    /**
+     * List payment accounts
+     *
+     * Get active bank accounts for manual transfer.
+     */
     public function accounts(): JsonResponse
     {
         $accounts = $this->paymentService->getActiveAccounts();
@@ -29,6 +41,15 @@ class PaymentController extends Controller
         );
     }
 
+    /**
+     * Upload payment proof
+     *
+     * Upload payment proof image for a pending order.
+     *
+     * @urlParam order integer required The order ID. Example: 1
+     * @bodyParam proof file required Payment proof image (jpg/jpeg/png, max 2MB).
+     * @bodyParam amount numeric required Transfer amount. Must match order total. Example: 65000
+     */
     public function upload(Order $order, PaymentUploadRequest $request): JsonResponse
     {
         if ($order->user_id !== auth()->id()) {

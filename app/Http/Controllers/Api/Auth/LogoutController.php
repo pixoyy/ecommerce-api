@@ -8,6 +8,11 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Authentication
+ *
+ * Customer logout.
+ */
 class LogoutController extends Controller
 {
     use ApiResponseTrait;
@@ -16,6 +21,13 @@ class LogoutController extends Controller
         protected AuthService $authService
     ) {}
 
+    /**
+     * Logout
+     *
+     * Revoke the current Bearer token.
+     *
+     * @authenticated
+     */
     public function __invoke(Request $request): JsonResponse
     {
         $this->authService->logout($request->user());

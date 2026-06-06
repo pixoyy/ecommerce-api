@@ -9,6 +9,13 @@ use App\Services\ShipmentService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Shipment
+ *
+ * Order shipment tracking.
+ *
+ * @authenticated
+ */
 class ShipmentController extends Controller
 {
     use ApiResponseTrait;
@@ -17,6 +24,13 @@ class ShipmentController extends Controller
         protected ShipmentService $shipmentService
     ) {}
 
+    /**
+     * Get shipment tracking
+     *
+     * View shipment and tracking logs for an order.
+     *
+     * @urlParam order integer required The order ID. Example: 1
+     */
     public function tracking(Order $order): JsonResponse
     {
         if ($order->user_id !== auth()->id()) {

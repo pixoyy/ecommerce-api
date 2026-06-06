@@ -8,6 +8,11 @@ use App\Services\ProductService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Catalog
+ *
+ * Product brands listing.
+ */
 class BrandController extends Controller
 {
     use ApiResponseTrait;

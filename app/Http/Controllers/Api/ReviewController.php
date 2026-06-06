@@ -10,6 +10,13 @@ use App\Services\ReviewService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Reviews
+ *
+ * Product reviews for completed orders.
+ *
+ * @authenticated
+ */
 class ReviewController extends Controller
 {
     use ApiResponseTrait;
@@ -18,6 +25,16 @@ class ReviewController extends Controller
         protected ReviewService $reviewService
     ) {}
 
+    /**
+     * Submit product review
+     *
+     * Submit a rating and review for a product in a delivered order.
+     *
+     * @urlParam order integer required The order ID. Example: 1
+     * @bodyParam product_variant_id integer required The product variant ID. Example: 1
+     * @bodyParam rating integer required Rating 1-5. Example: 5
+     * @bodyParam review string Optional review text. Example: Produk bagus sekali!
+     */
     public function store(Order $order, ReviewRequest $request): JsonResponse
     {
         if ($order->user_id !== auth()->id()) {

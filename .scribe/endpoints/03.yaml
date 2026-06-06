@@ -1,0 +1,116 @@
+name: Checkout
+description: |-
+
+  Create orders from cart items.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/checkout
+    metadata:
+      custom: []
+      groupName: Checkout
+      groupDescription: |-
+
+        Create orders from cart items.
+      subgroup: ''
+      subgroupDescription: ''
+      title: Checkout
+      description: |-
+        Create an order from the current cart. Validates stock, applies promotions,
+        redeems points if requested, deducts stock, clears cart, and grants earned points.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      shipping_address:
+        custom: []
+        name: shipping_address
+        description: 'Shipping address.'
+        required: true
+        example: 'Jl. Merdeka No. 1, Jakarta'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      shipping_note:
+        custom: []
+        name: shipping_note
+        description: 'Optional note for delivery.'
+        required: false
+        example: 'Pagi hari'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      buyer_name:
+        custom: []
+        name: buyer_name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: g
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      buyer_email:
+        custom: []
+        name: buyer_email
+        description: 'Must be a valid email address. Must not be greater than 255 characters.'
+        required: false
+        example: rowan.gulgowski@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      buyer_phone:
+        custom: []
+        name: buyer_phone
+        description: 'Must not be greater than 20 characters.'
+        required: false
+        example: dljnikhwaykcmyuw
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      redeem_points:
+        custom: []
+        name: redeem_points
+        description: 'Points to redeem.'
+        required: false
+        example: 10000
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      shipping_address: 'Jl. Merdeka No. 1, Jakarta'
+      shipping_note: 'Pagi hari'
+      buyer_name: g
+      buyer_email: rowan.gulgowski@example.com
+      buyer_phone: dljnikhwaykcmyuw
+      redeem_points: 10000
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

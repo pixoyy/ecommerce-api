@@ -10,6 +10,11 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Authentication
+ *
+ * Customer login and current user info.
+ */
 class LoginController extends Controller
 {
     use ApiResponseTrait;
@@ -18,6 +23,13 @@ class LoginController extends Controller
         protected AuthService $authService
     ) {}
 
+    /**
+     * Login
+     *
+     * Authenticate with email and password to get a Bearer token.
+     *
+     * @unauthenticated
+     */
     public function __invoke(LoginRequest $request): JsonResponse
     {
         $result = $this->authService->login($request->validated());
@@ -28,6 +40,13 @@ class LoginController extends Controller
         ], 'Login berhasil');
     }
 
+    /**
+     * Get current user
+     *
+     * Return the authenticated user's profile data.
+     *
+     * @authenticated
+     */
     public function me(Request $request): JsonResponse
     {
         $user = $this->authService->me($request->user());
